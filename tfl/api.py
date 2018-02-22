@@ -27,18 +27,14 @@ class Api(object):
 
     def credentials(self, app_id, app_key):
         if not all([app_id, app_key]):
-            raise TflError({
-                "message": "Missing App ID or App Key Credentials"
-            })
+            raise TflError("Missing App ID or App Key Credentials")
         self.app_id = app_id
         self.app_key = app_key
 
     def GetAccidentStats(self, year):
         url = self.base_url + "AccidentStats/{0}/"
         if not validate_year(year):
-            raise TflError({
-                "message": "\"Year\" is in incorrect format"
-            })
+            raise TflError("\"Year\" is in incorrect format")
         response = self._Request(url.format(year), http_method="GET")
         data = self._CheckResponse(response.json())
 
@@ -55,16 +51,14 @@ class Api(object):
         if isinstance(content, (dict, list)) and 'exceptionType' in content:
             message = "{0}: {1}".format(content['httpStatusCode'],
                                         content['message'])
-            raise TflError({"message": message})
+            raise TflError(message)
         return content
 
     def _BuildAbsoluteURL(self, url, get_params=None):
         (scheme, netloc, path, params, query, fragment) = urlparse(url)
         if get_params and len(get_params) > 0:
             if not isinstance(get_params, dict):
-                raise TflError({
-                    "message": "\"get_params\" must be a dict."
-                })
+                raise TflError("\"get_params\" must be a dict.")
 
             extra_parameters = urlencode(
                 dict((_k, _v) for _k, _v in get_params.items()
@@ -78,10 +72,8 @@ class Api(object):
 
     def _Request(self, url, http_method, extra_params=None, authenticate=True):
         if authenticate and not (self.app_id and self.app_key):
-            raise TflError({
-                "message": """The Tfl.Api instance requires "
-                              authentication to function"""
-            })
+            raise TflError(
+                "The Tfl.Api instance requires authentication to function")
         get_params = {"app_id": self.app_id, "app_key": self.app_key}
         if extra_params:
             get_params.update(extra_params)
