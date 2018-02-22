@@ -144,3 +144,84 @@ class AirQuality(TflModel):
 
     def __repr__(self):
         return "AirQuality(forecastID={0})".format(self.forecastID)
+
+
+class BpProperty(TflModel):
+
+    def __init__(self, **kwargs):
+        self.defaults = {
+            "category": None,
+            "key": None,
+            "sourceSystemKey": None,
+            "value": None,
+            "modified": None
+        }
+
+        for (param, default) in self.defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "BpProperty(Key={0}, Value={1})".format(self.key, self.value)
+
+    @property
+    def date_in_seconds(self):
+        return int(parser.parse(self.modified).strftime("%s"))
+
+
+class BpChildUrl(TflModel):
+
+    def __init__(self, **kwargs):
+        self.defaults = {
+            "type": None
+        }
+
+        for (param, default) in self.defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "BpChildUrl(Type={0})".format(self.type)
+
+
+class BikePoint(TflModel):
+
+    def __init__(self, **kwargs):
+        self.defaults = {
+            "id": None,
+            "url": None,
+            "commonName": None,
+            "distance": 0,
+            "placeType": None,
+            "additionalProperties": None,
+            "children": None,
+            "childrenUrls": None,
+            "lat": None,
+            "lon": None
+        }
+
+        for (param, default) in self.defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "BikePoint(ID={0}, CommonName={1})".format(
+            self.id, self.commonName
+        )
+
+    @classmethod
+    def fromJSON(cls, data, **kwargs):
+        additional_properties = None
+        children = None
+        children_urls = None
+
+        if 'additionalProperties' in data:
+            additional_properties = [
+                BpProperty.fromJSON(bp)
+                for bp in data['additionalProperties']]
+        if 'children' in data:
+            children = [c for c in data['children']]
+        if 'childrenUrls' in data:
+            children_urls = [
+                BpChildUrl.fromJSON(cu) for cu in data['childrenUrls']]
+
+        return super(cls, cls).fromJSON(
+            data=data, additionalProperties=additional_properties,
+            children=children, childrenUrls=children_urls)

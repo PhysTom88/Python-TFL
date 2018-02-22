@@ -41,3 +41,16 @@ class TestTflApi(unittest.TestCase):
 
         self.assertEqual(len(air_quality), 2)
         self.assertTrue(isinstance(air_quality[0], tfl.AirQuality))
+
+    def test_bike_point(self):
+        api = tfl.Api(app_id=self.app_id, app_key=self.app_key)
+        bike_points = api.GetBikePoints()
+
+        self.assertGreater(len(bike_points), 0)
+
+        bike_point = bike_points[0]
+        self.assertTrue(isinstance(bike_point, tfl.BikePoint))
+        self.assertGreater(len(bike_point.additionalProperties), 0)
+        self.assertTrue(isinstance(
+            bike_point.additionalProperties[0], tfl.BpProperty)
+        )

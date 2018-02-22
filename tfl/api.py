@@ -9,7 +9,8 @@ except ImportError:
 
 from tfl import (
     Accident,
-    AirQuality
+    AirQuality,
+    BikePoint
 )
 
 from tfl.exceptions import TflError
@@ -46,6 +47,13 @@ class Api(object):
         data = self._CheckResponse(response.json().get('currentForecast'))
 
         return [AirQuality.fromJSON(x) for x in data]
+
+    def GetBikePoints(self):
+        url = self.base_url + "BikePoint/"
+        response = self._Request(url, http_method="GET")
+        data = self._CheckResponse(response.json())
+
+        return [BikePoint.fromJSON(b) for b in data]
 
     def _CheckResponse(self, content):
         if isinstance(content, (dict, list)) and 'exceptionType' in content:

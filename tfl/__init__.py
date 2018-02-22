@@ -10,6 +10,9 @@ from .models import (
     AccidentVehicle,
     AirQuality,
     Casualty,
+    BpProperty,
+    BpChildUrl,
+    BikePoint,
 )
 
 from .api import Api
