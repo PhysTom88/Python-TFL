@@ -1,6 +1,5 @@
 
 # -*- coding: utf-8 -*-
-import json
 import requests
 try:
     from urllib.parse import urlparse, urlunparse, urlencode
@@ -41,7 +40,7 @@ class Api(object):
                 "message": "\"Year\" is in incorrect format"
             })
         response = self._Request(url.format(year), http_method="GET")
-        data = self._CheckResponse(response.content.decode("utf-8"))
+        data = self._CheckResponse(response.json())
 
         return [Accident.fromJson(x) for x in data]
 
@@ -50,21 +49,14 @@ class Api(object):
         response = self._Request(url, http_method="GET")
         data = self._CheckResponse(response.json().get('currentForecast'))
 
-        return [AirQuality.fromJSON() for x in data]
+        return [AirQuality.fromJSON(x) for x in data]
 
     def _CheckResponse(self, content):
-        try:
-            data = json.loads(content)
-        except ValueError:
-            raise TflError({
-                "message": "Error Recieved: {0}".format(content)
-            })
-
-        if 'exceptionType' in data:
-            message = "{0}: {1}".format(data['httpStatusCode'],
-                                        data['message'])
+        if isinstance(content, (dict, list)) and 'exceptionType' in content:
+            message = "{0}: {1}".format(content['httpStatusCode'],
+                                        content['message'])
             raise TflError({"message": message})
-        return data
+        return content
 
     def _BuildAbsoluteURL(self, url, get_params=None):
         (scheme, netloc, path, params, query, fragment) = urlparse(url)
@@ -73,9 +65,10 @@ class Api(object):
                 raise TflError({
                     "message": "\"get_params\" must be a dict."
                 })
+
             extra_parameters = urlencode(
-                dict(_k, _v) for _k, _v in get_params.items()
-                if _v is not None)
+                dict((_k, _v) for _k, _v in get_params.items()
+                     if _v is not None))
             if query:
                 query += '&' + extra_parameters
             else:

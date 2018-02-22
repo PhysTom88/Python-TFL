@@ -7,7 +7,9 @@ __description__ = "A Python Wrapper around the TFL API"
 
 from .models import (
     Accident,
-    AirQuality
+    AccidentVehicle,
+    AirQuality,
+    Casualty,
 )
 
 from .api import Api

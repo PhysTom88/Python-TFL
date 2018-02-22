@@ -117,7 +117,7 @@ class Accident(TflModel):
         if 'casualties' in data:
             casualties = [Casualty.fromJSON(c) for c in data['casualties']]
         if 'vehicles' in data:
-            vehicles = [AccidentVehicle.fromJSON(v) for v in data[vehicles]]
+            vehicles = [AccidentVehicle.fromJSON(v) for v in data['vehicles']]
 
         return super(cls, cls).fromJSON(
             data=data, casualties=casualties, vehicles=vehicles)
