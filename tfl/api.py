@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import requests
 try:
-    from urllib.parse import urlparse, urlunparse, urlencode
+    from urllib.parse import urlparse, urlunparse, urlencode, quote_plus
 except ImportError:
     from urlparse import urlparse, urlunparse
     from urllib import urlencode
@@ -34,9 +34,9 @@ class Api(object):
 
     def GetAccidentStats(self, year):
         url = self.base_url + "AccidentStats/{0}/"
-        if not validate_year(year):
+        if not validate_year(str(year)):
             raise TflError("\"Year\" is in incorrect format")
-        response = self._Request(url.format(year), http_method="GET")
+        response = self._Request(url.format(str(year)), http_method="GET")
         data = self._CheckResponse(response.json())
 
         return [Accident.fromJson(x) for x in data]
@@ -51,6 +51,22 @@ class Api(object):
     def GetBikePoints(self):
         url = self.base_url + "BikePoint/"
         response = self._Request(url, http_method="GET")
+        data = self._CheckResponse(response.json())
+
+        return [BikePoint.fromJSON(b) for b in data]
+
+    def GetBikePoint(self, point):
+        url = self.base_url + "BikePoint/{0}"
+        response = self._Request(url.format(point), http_method="GET")
+        data = self._CheckResponse(response.json())
+
+        return BikePoint.fromJSON(data)
+
+    def SearchBikePoints(self, query):
+        url = self.base_url + "BikePoint/Search/"
+        extra_params = {"query": query}
+        response = self._Request(
+            url, extra_params=extra_params, http_method="GET")
         data = self._CheckResponse(response.json())
 
         return [BikePoint.fromJSON(b) for b in data]
