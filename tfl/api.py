@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import requests
 try:
-    from urllib.parse import urlparse, urlunparse, urlencode, quote_plus
+    from urllib.parse import urlparse, urlunparse, urlencode
 except ImportError:
     from urlparse import urlparse, urlunparse
     from urllib import urlencode
