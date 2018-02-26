@@ -36,7 +36,7 @@ class TflModel(object):
             elif getattr(getattr(self, key, None), "toDict", None):
                 data[key] = getattr(self, key).toDict()
 
-            elif getattr(self, key, None):
+            elif hasattr(self, key):
                 data[key] = getattr(self, key, None)
 
         return data
@@ -225,3 +225,19 @@ class BikePoint(TflModel):
         return super(cls, cls).fromJSON(
             data=data, additionalProperties=additional_properties,
             children=children, childrenUrls=children_urls)
+
+class JourneyMode(TflModel):
+
+    def __init__(self, **kwargs):
+        self.defaults = {
+            "isTflService": False,
+            "isFarePaying": False,
+            "isScheduledService": False,
+            "modeName": None
+        }
+
+        for (param, default) in self.defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "JourneyMode(ModeName={0})".format(self.modeName)

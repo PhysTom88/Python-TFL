@@ -95,3 +95,9 @@ class TestTflApi(unittest.TestCase):
         api = tfl.Api(app_id=self.app_id, app_key=self.app_key)
         bike_points = api.SearchBikePoints("Nowhere in London")
         self.assertEqual(len(bike_points), 0)
+
+    def test_journey_mode(self):
+        api = tfl.Api(app_id=self.app_id, app_key=self.app_key)
+        modes = api.GetJourneyModes()
+        self.assertGreater(len(modes), 0)
+        self.assertTrue(isinstance(modes[0], tfl.JourneyMode))

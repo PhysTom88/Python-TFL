@@ -10,7 +10,8 @@ except ImportError:
 from tfl import (
     Accident,
     AirQuality,
-    BikePoint
+    BikePoint,
+    JourneyMode
 )
 
 from tfl.exceptions import TflError
@@ -61,6 +62,13 @@ class Api(object):
         data = self._CheckResponse(response.json())
 
         return BikePoint.fromJSON(data)
+
+    def GetJourneyModes(self):
+        url = self.base_url + "Journey/Meta/Modes/"
+        response = self._Request(url, http_method="GET")
+        data = self._CheckResponse(response.json())
+
+        return [JourneyMode.fromJSON(j) for j in data]
 
     def SearchBikePoints(self, query):
         url = self.base_url + "BikePoint/Search/"
