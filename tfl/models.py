@@ -36,7 +36,7 @@ class TflModel(object):
             elif getattr(getattr(self, key, None), "toDict", None):
                 data[key] = getattr(self, key).toDict()
 
-            elif getattr(self, key, None):
+            elif hasattr(self, key):
                 data[key] = getattr(self, key, None)
 
         return data
@@ -225,3 +225,74 @@ class BikePoint(TflModel):
         return super(cls, cls).fromJSON(
             data=data, additionalProperties=additional_properties,
             children=children, childrenUrls=children_urls)
+
+
+class Cabwise(TflModel):
+
+    def __init__(self, **kwargs):
+        self.defaults = {
+            "OperatorId": 0,
+            "OrganisationName": None,
+            "TradingName": None,
+            "AlsoKnownAs": None,
+            "CentreId": None,
+            "AddressLine1": None,
+            "AddressLine2": None,
+            "AddressLine3": None,
+            "Town": None,
+            "County": None,
+            "Postcode": None,
+            "BookingsPhoneNumber": None,
+            "BookingsEmail": None,
+            "PublicAccess": None,
+            "PublicWaitingRoom": None,
+            "WheelchairAccessible": None,
+            "CreditDebitCard": None,
+            "ChequeBankersCard": None,
+            "AccountServicesAvailable": None,
+            "HoursOfOperation24X7": None,
+            "HoursOfOperationMonThu": None,
+            "StartTimeMonThu": None,
+            "EndTimeMonThu": None,
+            "HoursOfOperationFri": None,
+            "StartTimeFri": None,
+            "EndTimeFri": None,
+            "HoursOfOperationSat": None,
+            "StartTimeSat": None,
+            "EndTimeSat": None,
+            "HoursOfOperationSun": None,
+            "StartTimeSun": None,
+            "EndTimeSun": None,
+            "HoursOfOperationPubHol": None,
+            "StartTimePubHol": None,
+            "EndTimePubHol": None,
+            "NumberOfVehicles": None,
+            "NumberOfVehiclesWheelchair": None,
+            "Longitude": None,
+            "Latitude": None,
+            "OperatorTypes": None,
+            "Distance": None
+        }
+
+        for (param, default) in self.defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "Cabwise(ID={0}, Name={1})".format(
+            self.CentreId, self.TradingName
+        )
+
+    @classmethod
+    def fromJSON(cls, data, **kwargs):
+        also_known_as = None
+        operator_types = None
+
+        if 'AlsoKnownAs' in data:
+            also_known_as = [a for a in data["AlsoKnownAs"]]
+        if 'OperatorTypes' in data:
+            operator_types = [t for t in data["OperatorTypes"]]
+
+        return super(cls, cls).fromJSON(
+            data=data, AlsoKnownAs=also_known_as,
+            OperatorTypes=operator_types
+        )

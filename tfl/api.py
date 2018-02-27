@@ -10,11 +10,12 @@ except ImportError:
 from tfl import (
     Accident,
     AirQuality,
-    BikePoint
+    BikePoint,
+    Cabwise
 )
 
 from tfl.exceptions import TflError
-from tfl.utils import validate_year
+from tfl.utils import validate_year, validate_number, validate_boolean
 
 
 class Api(object):
@@ -34,9 +35,8 @@ class Api(object):
 
     def GetAccidentStats(self, year):
         url = self.base_url + "AccidentStats/{0}/"
-        if not validate_year(str(year)):
-            raise TflError("\"Year\" is in incorrect format")
-        response = self._Request(url.format(str(year)), http_method="GET")
+        year = validate_year(str(year))
+        response = self._Request(url.format(year), http_method="GET")
         data = self._CheckResponse(response.json())
 
         return [Accident.fromJson(x) for x in data]
@@ -70,6 +70,29 @@ class Api(object):
         data = self._CheckResponse(response.json())
 
         return [BikePoint.fromJSON(b) for b in data]
+
+    def SearchCabwise(
+            self, lat, lon, optype=None, wc=None, radius=None,
+            name=None, maxResults=None, legacy_format=True,
+            twentyfour_seven=True):
+        url = self.base_url + "Cabwise/Search"
+        extra_params = {}
+        extra_params["lat"] = validate_number(lat)
+        extra_params["lon"] = validate_number(lon)
+
+        if radius:
+            extra_params["radius"] = validate_number(radius)
+        if maxResults:
+            extra_params["maxResults"] = validate_number(maxResults)
+        if twentyfour_seven is not None:
+            extra_params["twentyfour_seven"] = validate_boolean(
+                twentyfour_seven)
+        response = self._Request(
+            url, extra_params=extra_params, http_method="GET")
+        data = self._CheckResponse(
+            response.json()["Operators"]["OperatorList"])
+
+        return [Cabwise.fromJSON(c) for c in data]
 
     def _CheckResponse(self, content):
         if isinstance(content, (dict, list)) and 'exceptionType' in content:

@@ -13,6 +13,7 @@ class TestTflApi(unittest.TestCase):
         self.app_id = os.environ.get("APP_ID")
         self.app_key = os.environ.get("APP_KEY")
         self.base_url = "https://api.tfl.gov.uk/"
+        self.api = tfl.Api(app_id=self.app_id, app_key=self.app_key)
 
     def test_api_credentials(self):
         api = tfl.Api(app_id="test", app_key="test")
@@ -23,8 +24,7 @@ class TestTflApi(unittest.TestCase):
         self.assertRaises(tfl.TflError, lambda: tfl.Api())
 
     def test_accident_correct_year(self):
-        api = tfl.Api(app_id=self.app_id, app_key=self.app_key)
-        accidents = api.GetAccidentStats(2016)
+        accidents = self.api.GetAccidentStats(2016)
         self.assertTrue(isinstance(accidents, (list, tuple, set)))
         self.assertGreater(len(accidents), 0)
 
@@ -37,25 +37,23 @@ class TestTflApi(unittest.TestCase):
         self.assertTrue(isinstance(accident.casualties[0], tfl.Casualty))
 
     def test_accident_incorrect_year(self):
-        api = tfl.Api(app_id=self.app_id, app_key=self.app_key)
-        self.assertRaises(tfl.TflError, lambda: api.GetAccidentStats(1901))
+        self.assertRaises(
+            tfl.TflError, lambda: self.api.GetAccidentStats(1901)
+        )
 
     def test_accident_incorrect_format(self):
-        api = tfl.Api(app_id=self.app_id, app_key=self.app_key)
         self.assertRaises(
-            tfl.TflError, lambda: api.GetAccidentStats("Invalid Year")
+            tfl.TflError, lambda: self.api.GetAccidentStats("Invalid Year")
         )
 
     def test_air_quality(self):
-        api = tfl.Api(app_id=self.app_id, app_key=self.app_key)
-        air_quality = api.GetAirQuality()
+        air_quality = self.api.GetAirQuality()
 
         self.assertEqual(len(air_quality), 2)
         self.assertTrue(isinstance(air_quality[0], tfl.AirQuality))
 
     def test_bike_points(self):
-        api = tfl.Api(app_id=self.app_id, app_key=self.app_key)
-        bike_points = api.GetBikePoints()
+        bike_points = self.api.GetBikePoints()
         self.assertTrue(isinstance(bike_points, (list, tuple, set)))
         self.assertGreater(len(bike_points), 0)
 
@@ -67,8 +65,7 @@ class TestTflApi(unittest.TestCase):
         )
 
     def test_bike_point_correct(self):
-        api = tfl.Api(app_id=self.app_id, app_key=self.app_key)
-        bike_point = api.GetBikePoint("BikePoints_76")
+        bike_point = self.api.GetBikePoint("BikePoints_76")
 
         self.assertTrue(isinstance(bike_point, tfl.BikePoint))
         self.assertGreater(len(bike_point.additionalProperties), 0)
@@ -77,14 +74,12 @@ class TestTflApi(unittest.TestCase):
         )
 
     def test_bike_point_incorrect(self):
-        api = tfl.Api(app_id=self.app_id, app_key=self.app_key)
         self.assertRaises(
-            tfl.TflError, lambda: api.GetBikePoint("Invalid_BikePoint")
+            tfl.TflError, lambda: self.api.GetBikePoint("Invalid_BikePoint")
         )
 
     def test_bike_point_search_correct(self):
-        api = tfl.Api(app_id=self.app_id, app_key=self.app_key)
-        bike_points = api.SearchBikePoints("St James")
+        bike_points = self.api.SearchBikePoints("St James")
         self.assertTrue(isinstance(bike_points, (list, tuple, set)))
         self.assertGreater(len(bike_points), 0)
 
@@ -92,6 +87,24 @@ class TestTflApi(unittest.TestCase):
         self.assertTrue(isinstance(bike_point, tfl.BikePoint))
 
     def test_bike_point_search_invalid(self):
-        api = tfl.Api(app_id=self.app_id, app_key=self.app_key)
-        bike_points = api.SearchBikePoints("Nowhere in London")
+        bike_points = self.api.SearchBikePoints("Nowhere in London")
         self.assertEqual(len(bike_points), 0)
+
+    def test_cabwise_correct_no_options(self):
+        cabwise = self.api.SearchCabwise(lat=51.5033, lon=-0.12763)
+        self.assertTrue(isinstance(cabwise, (list, tuple, set)))
+        self.assertGreater(len(cabwise), 0)
+
+        cab = cabwise[0]
+        self.assertTrue(isinstance(cab, tfl.Cabwise))
+
+    def test_cabwise_correct_extra_params(self):
+        cabwise = self.api.SearchCabwise(
+            lat=51.5033, lon=-0.12763, optype="Minicab",
+            radius=2000, maxResults=1)
+        self.assertTrue(isinstance(cabwise, (list, tuple, set)))
+        self.assertEqual(len(cabwise), 1)
+
+        cab = cabwise[0]
+        self.assertTrue(isinstance(cab, tfl.Cabwise))
+        self.assertIn("Minicab", cab.OperatorTypes)

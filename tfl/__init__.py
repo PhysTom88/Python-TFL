@@ -13,6 +13,7 @@ from .models import (
     BpProperty,
     BpChildUrl,
     BikePoint,
+    Cabwise,
 )
 
 from .api import Api
