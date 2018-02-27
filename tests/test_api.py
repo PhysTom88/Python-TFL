@@ -108,3 +108,9 @@ class TestTflApi(unittest.TestCase):
         cab = cabwise[0]
         self.assertTrue(isinstance(cab, tfl.Cabwise))
         self.assertIn("Minicab", cab.OperatorTypes)
+
+    def test_journey_mode(self):
+        api = tfl.Api(app_id=self.app_id, app_key=self.app_key)
+        modes = api.GetJourneyModes()
+        self.assertGreater(len(modes), 0)
+        self.assertTrue(isinstance(modes[0], tfl.JourneyMode))

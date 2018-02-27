@@ -296,3 +296,20 @@ class Cabwise(TflModel):
             data=data, AlsoKnownAs=also_known_as,
             OperatorTypes=operator_types
         )
+
+
+class JourneyMode(TflModel):
+
+    def __init__(self, **kwargs):
+        self.defaults = {
+            "isTflService": False,
+            "isFarePaying": False,
+            "isScheduledService": False,
+            "modeName": None
+        }
+
+        for (param, default) in self.defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "JourneyMode(ModeName={0})".format(self.modeName)

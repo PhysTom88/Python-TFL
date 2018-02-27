@@ -14,6 +14,7 @@ from .models import (
     BpChildUrl,
     BikePoint,
     Cabwise,
+    JourneyMode
 )
 
 from .api import Api
