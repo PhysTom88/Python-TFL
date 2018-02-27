@@ -17,21 +17,10 @@ def validate_year(year):
     return str(year)
 
 
-def validate_number(number):
+def validate_input(_input, _type, var):
     try:
-        float(number)
-    except ValueError as e:
-        raise TflError(e)
+        _value = _type(_input)
+    except ValueError:
+        raise TflError("\"{0}\" is not of type {1}".format(var.__name__))
     else:
-        return number
-
-
-def validate_boolean(_bool):
-    if isinstance(_bool, bool):
-        return _bool
-    elif _bool.lower() in ["t", "true"]:
-        return True
-    elif _bool.lower() in ["f", "false"]:
-        return False
-    else:
-        raise TflError("\"{0}\" is not a valid boolean".format(_bool))
+        return _value

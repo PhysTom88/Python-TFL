@@ -313,3 +313,23 @@ class JourneyMode(TflModel):
 
     def __repr__(self):
         return "JourneyMode(ModeName={0})".format(self.modeName)
+
+
+class JourneyPlanner(TflModel):
+
+    def __init__(self, **kwargs):
+        self.defaults = {
+            "toLocationDisambiguation": None,
+            "fromLocationDisambiguation": None,
+            "viaLocationDisambiguation": None,
+            "recommendedMaxAgeMinutes": None,
+            "searchCriteria": None,
+            "journeyVector": None
+        }
+
+        for (param, default) in self.defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "JourneyPlanner(From={0}, To={1})".format(
+            self.journeyVector._from, self.journeyVector.to)

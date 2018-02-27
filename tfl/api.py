@@ -12,11 +12,12 @@ from tfl import (
     AirQuality,
     BikePoint,
     Cabwise,
-    JourneyMode
+    JourneyMode,
+    JourneyPlanner
 )
 
 from tfl.exceptions import TflError
-from tfl.utils import validate_year, validate_number, validate_boolean
+from tfl.utils import validate_year, validate_input
 
 
 class Api(object):
@@ -85,22 +86,109 @@ class Api(object):
             twentyfour_seven=True):
         url = self.base_url + "Cabwise/Search"
         extra_params = {}
-        extra_params["lat"] = validate_number(lat)
-        extra_params["lon"] = validate_number(lon)
+        extra_params["lat"] = validate_input(lat, float, "lat")
+        extra_params["lon"] = validate_input(lon, float, "lon")
 
         if radius:
-            extra_params["radius"] = validate_number(radius)
+            extra_params["radius"] = validate_input(radius, float, "radius")
         if maxResults:
-            extra_params["maxResults"] = validate_number(maxResults)
+            extra_params["maxResults"] = validate_input(
+                maxResults, int, "maxResults"
+            )
         if twentyfour_seven is not None:
-            extra_params["twentyfour_seven"] = validate_boolean(
-                twentyfour_seven)
+            extra_params["twentyfour_seven"] = validate_input(
+                twentyfour_seven, bool, "twentyfour_seven"
+            )
         response = self._Request(
             url, extra_params=extra_params, http_method="GET")
         data = self._CheckResponse(
             response.json()["Operators"]["OperatorList"])
 
         return [Cabwise.fromJSON(c) for c in data]
+
+    def SearchJourneyPlanner(
+            self, _from, to, via=None, nationalSearch=False, date=None,
+            time=None, timels=None, journeyPreference=None, mode=None,
+            accessibilityPreference=None, fromName=None, toName=None,
+            viaName=None, maxTransferMinutes=None, maxWalkingMinutes=None,
+            walkingSpeed=None, cyclePreference=None, adjustment=None,
+            bikeProficiency=None, alternativeCycle=None,
+            alternativeWalking=None, useMultiModalCall=None,
+            walkingOptimsation=False, taxiOnlyTrip=False):
+        url = self.base_url + "Journey/Journey/{0}/to/{1}"
+
+        extra_params = {}
+        if via is not None:
+            extra_params["via"] = validate_input(via, str, "via")
+        if nationalSearch is not None:
+            extra_params["nationalSearch"] = validate_input(
+                nationalSearch, bool, "nationalSearch"
+            )
+        if date is not None:
+            extra_params["date"] = validate_input(date, str, "data")
+        if time is not None:
+            extra_params["time"] = validate_input(time, str, "time")
+        if timels in ["Arriving", "Departing"]:
+            extra_params["timels"] = timels
+        if journeyPreference in ["LeastInterchange", "LeastWalking",
+                                 "leastTime"]:
+            extra_params["journeyPreference"] = journeyPreference
+        if mode is not None:
+            if isinstance(mode, (tuple, list)):
+                extra_params["mode"] = ','.join(
+                    [validate_input(m) for m in mode])
+            else:
+                extra_params["mode"] = validate_input(mode, str, "mode")
+        if (accessibilityPreference in
+            ["noSolidStairs", "noEscalators", "noElavators",
+             "stepFreeToVehicle", "stepFreeToPlatform"]):
+            extra_params["accessibilityPreference"] = accessibilityPreference
+        if fromName is not None:
+            extra_params["fromName"] = validate_input(
+                fromName, str, "fromName")
+        if toName is not None:
+            extra_params["toName"] = validate_input(toName, str, "toName")
+        if viaName is not None:
+            extra_params["viaName"] = validate_input(viaName, str, "viaName")
+        if maxTransferMinutes is not None:
+            extra_params["maxTransferMinutes"] = str(validate_input(
+                maxTransferMinutes, int, "maxTransferMinutes")
+            )
+        if maxWalkingMinutes is not None:
+            extra_params["maxWalkingMinutes"] = str(
+                validate_input(maxWalkingMinutes, int, "maxWalkingMinutes")
+            )
+        if walkingSpeed in ["Slow", "Average", "Fast"]:
+            extra_params["walkingSpeed"] = walkingSpeed
+        if (cyclePreference in
+                ["AllTheWay", "LeaveAtStation", "TakeOnTransport",
+                 "CycleHire"]):
+            extra_params["cyclePreference"] = cyclePreference
+        if adjustment in ["TripFirst", "TripLast"]:
+            extra_params["adjustment"] = adjustment
+        if bikeProficiency in ["Easy", "Moderate", "Fast"]:
+            extra_params["bikeProficiency"] = bikeProficiency
+        if alternativeCycle is not None:
+            extra_params["alternativeCycle"] = validate_input(
+                alternativeCycle, bool, "alternativeCycle")
+        if useMultiModalCall is not None:
+            extra_params["useMultiModalCall"] = validate_input(
+                useMultiModalCall, bool, "useMultiModalCall")
+        if walkingOptimsation is not None:
+            extra_params["walkingOptimsation"] = validate_input(
+                walkingOptimsation, bool, "walkingOptimsation")
+        if taxiOnlyTrip is not None:
+            extra_params["taxiOnlyTrip"] = validate_input(
+                taxiOnlyTrip, bool, "taxiOnlyTrip")
+        response = self._Request(
+            url.format(
+                validate_input(_from, str, "_from"),
+                validate_input(to, str, "to")),
+            extra_params=extra_params, http_method="GET")
+        data = self._CheckResponse(
+            response.json())
+
+        return JourneyPlanner.fromJSON(data)
 
     def _CheckResponse(self, content):
         if isinstance(content, (dict, list)) and 'exceptionType' in content:
