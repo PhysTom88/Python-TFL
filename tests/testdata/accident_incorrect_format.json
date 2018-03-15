@@ -1,0 +1,1 @@
+{"$type":"Tfl.Api.Presentation.Entities.ApiError, Tfl.Api.Presentation.Entities","timestampUtc":"2018-03-15T14:43:05.7706759Z","exceptionType":"ApiArgumentException","httpStatusCode":400,"httpStatus":"BadRequest","relativeUri":"/AccidentStats/test/","message":"The value 'test' is not valid for Int32. "}

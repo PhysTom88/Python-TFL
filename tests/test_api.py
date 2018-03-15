@@ -2,9 +2,14 @@
 from __future__ import unicode_literals
 
 import os
+import re
+import responses
 import unittest
 
 import tfl
+
+
+DEFAULT_URL = re.compile(r'https?://.*\.tfl.gov.uk/.*')
 
 
 class TestTflApi(unittest.TestCase):
@@ -12,18 +17,25 @@ class TestTflApi(unittest.TestCase):
     def setUp(self):
         self.app_id = os.environ.get("APP_ID")
         self.app_key = os.environ.get("APP_KEY")
-        self.base_url = "https://api.tfl.gov.uk/"
         self.api = tfl.Api(app_id=self.app_id, app_key=self.app_key)
 
     def test_api_credentials(self):
         api = tfl.Api(app_id="test", app_key="test")
         self.assertTrue(all([api.app_id, api.app_key]))
-        self.assertEqual(self.base_url, api.base_url)
 
     def test_api_no_credentials(self):
         self.assertRaises(tfl.TflError, lambda: tfl.Api())
 
+    @responses.activate
     def test_accident_correct_year(self):
+        with open("tests/testdata/accident_correct.json") as f:
+            json_data = f.read()
+
+        responses.add(
+            responses.GET, DEFAULT_URL, body=json_data,
+            match_querystring=True
+        )
+
         accidents = self.api.GetAccidentStats(2016)
         self.assertTrue(isinstance(accidents, (list, tuple, set)))
         self.assertGreater(len(accidents), 0)
@@ -37,11 +49,27 @@ class TestTflApi(unittest.TestCase):
         self.assertTrue(isinstance(accident.casualties[0], tfl.Casualty))
 
     def test_accident_incorrect_year(self):
+        with open("tests/testdata/accident_incorrect_year.json") as f:
+            json_data = f.read()
+
+        responses.add(
+            responses.GET, DEFAULT_URL, body=json_data,
+            match_querystring=True
+        )
+
         self.assertRaises(
             tfl.TflError, lambda: self.api.GetAccidentStats(1901)
         )
 
     def test_accident_incorrect_format(self):
+        with open("tests/testdata/accident_incorrect_format.json") as f:
+            json_data = f.read()
+
+        responses.add(
+            responses.GET, DEFAULT_URL, body=json_data,
+            match_querystring=True
+        )
+
         self.assertRaises(
             tfl.TflError, lambda: self.api.GetAccidentStats("Invalid Year")
         )
@@ -61,7 +89,7 @@ class TestTflApi(unittest.TestCase):
         self.assertTrue(isinstance(bike_point, tfl.Point))
         self.assertGreater(len(bike_point.additionalProperties), 0)
         self.assertTrue(isinstance(
-            bike_point.additionalProperties[0], tfl.BpProperty)
+            bike_point.additionalProperties[0], tfl.AdditionalProperty)
         )
 
     def test_bike_point_correct(self):
@@ -70,7 +98,7 @@ class TestTflApi(unittest.TestCase):
         self.assertTrue(isinstance(bike_point, tfl.Point))
         self.assertGreater(len(bike_point.additionalProperties), 0)
         self.assertTrue(isinstance(
-            bike_point.additionalProperties[0], tfl.BpProperty)
+            bike_point.additionalProperties[0], tfl.AdditionalProperty)
         )
 
     def test_bike_point_incorrect(self):
