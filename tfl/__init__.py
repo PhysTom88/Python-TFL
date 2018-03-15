@@ -3,19 +3,20 @@
 from __future__ import absolute_import
 
 __author__ = "Tom Ravenscroft"
-__description__ = "A Python Wrapper around the TFL API"
+__description__ = "A Python Wrapper around the TfL API"
 
 from .models import (
     Accident,
     AccidentVehicle,
     AirQuality,
     Casualty,
-    BpProperty,
+    AdditionalProperty,
     BpChildUrl,
-    BikePoint,
+    Point,
     Cabwise,
     JourneyMode,
-    JourneyPlanner
+    JourneyDisambiguation,
+    JourneyPlanner,
 )
 
 from .api import Api

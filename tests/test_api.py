@@ -58,7 +58,7 @@ class TestTflApi(unittest.TestCase):
         self.assertGreater(len(bike_points), 0)
 
         bike_point = bike_points[0]
-        self.assertTrue(isinstance(bike_point, tfl.BikePoint))
+        self.assertTrue(isinstance(bike_point, tfl.Point))
         self.assertGreater(len(bike_point.additionalProperties), 0)
         self.assertTrue(isinstance(
             bike_point.additionalProperties[0], tfl.BpProperty)
@@ -67,7 +67,7 @@ class TestTflApi(unittest.TestCase):
     def test_bike_point_correct(self):
         bike_point = self.api.GetBikePoint("BikePoints_76")
 
-        self.assertTrue(isinstance(bike_point, tfl.BikePoint))
+        self.assertTrue(isinstance(bike_point, tfl.Point))
         self.assertGreater(len(bike_point.additionalProperties), 0)
         self.assertTrue(isinstance(
             bike_point.additionalProperties[0], tfl.BpProperty)
@@ -84,7 +84,7 @@ class TestTflApi(unittest.TestCase):
         self.assertGreater(len(bike_points), 0)
 
         bike_point = bike_points[0]
-        self.assertTrue(isinstance(bike_point, tfl.BikePoint))
+        self.assertTrue(isinstance(bike_point, tfl.Point))
 
     def test_bike_point_search_invalid(self):
         bike_points = self.api.SearchBikePoints("Nowhere in London")

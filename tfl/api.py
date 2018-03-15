@@ -10,9 +10,10 @@ except ImportError:
 from tfl import (
     Accident,
     AirQuality,
-    BikePoint,
+    Point,
     Cabwise,
     JourneyMode,
+    JourneyDisambiguation,
     JourneyPlanner
 )
 
@@ -41,7 +42,7 @@ class Api(object):
         response = self._Request(url.format(year), http_method="GET")
         data = self._CheckResponse(response.json())
 
-        return [Accident.fromJson(x) for x in data]
+        return [Accident.fromJSON(x) for x in data]
 
     def GetAirQuality(self):
         url = self.base_url + "AirQuality/"
@@ -55,14 +56,14 @@ class Api(object):
         response = self._Request(url, http_method="GET")
         data = self._CheckResponse(response.json())
 
-        return [BikePoint.fromJSON(b) for b in data]
+        return [Point.fromJSON(b) for b in data]
 
     def GetBikePoint(self, point):
         url = self.base_url + "BikePoint/{0}"
         response = self._Request(url.format(point), http_method="GET")
         data = self._CheckResponse(response.json())
 
-        return BikePoint.fromJSON(data)
+        return Point.fromJSON(data)
 
     def GetJourneyModes(self):
         url = self.base_url + "Journey/Meta/Modes/"
@@ -78,7 +79,7 @@ class Api(object):
             url, extra_params=extra_params, http_method="GET")
         data = self._CheckResponse(response.json())
 
-        return [BikePoint.fromJSON(b) for b in data]
+        return [Point.fromJSON(b) for b in data]
 
     def SearchCabwise(
             self, lat, lon, optype=None, wc=None, radius=None,
@@ -115,7 +116,7 @@ class Api(object):
             bikeProficiency=None, alternativeCycle=None,
             alternativeWalking=None, useMultiModalCall=None,
             walkingOptimsation=False, taxiOnlyTrip=False):
-        url = self.base_url + "Journey/Journey/{0}/to/{1}"
+        url = self.base_url + "Journey/JourneyResults/{0}/to/{1}"
 
         extra_params = {}
         if via is not None:
@@ -180,6 +181,7 @@ class Api(object):
         if taxiOnlyTrip is not None:
             extra_params["taxiOnlyTrip"] = validate_input(
                 taxiOnlyTrip, bool, "taxiOnlyTrip")
+
         response = self._Request(
             url.format(
                 validate_input(_from, str, "_from"),
@@ -188,7 +190,10 @@ class Api(object):
         data = self._CheckResponse(
             response.json())
 
-        return JourneyPlanner.fromJSON(data)
+        if "DisambiguationResult" in data["$type"]:
+            return JourneyDisambiguation.fromJSON(data)
+        else:
+            return JourneyPlanner.fromJSON(data)
 
     def _CheckResponse(self, content):
         if isinstance(content, (dict, list)) and 'exceptionType' in content:
