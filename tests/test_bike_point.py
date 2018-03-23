@@ -1,4 +1,3 @@
-import calendar
 import json
 import unittest
 
@@ -10,7 +9,7 @@ class BikePointTest(unittest.TestCase):
     SAMPLE_JSON = '''{"lon": -0.144083, "url": "/Place/BikePoints_76", "commonName": "Longford Street, The Regent's Park", "placeType": "BikePoint", "lat": 51.525595, "id": "BikePoints_76"}'''
 
     def _SampleBikePoint(self):
-        return tfl.BikePoint(
+        return tfl.Point(
             id="BikePoints_76",
             url="/Place/BikePoints_76",
             commonName="Longford Street, The Regent's Park",
@@ -20,7 +19,7 @@ class BikePointTest(unittest.TestCase):
         )
 
     def test_parameters(self):
-        bike_point = tfl.BikePoint()
+        bike_point = tfl.Point()
         bike_point.id = "BikePoints_76"
         self.assertEqual("BikePoints_76", bike_point.id)
 
@@ -53,5 +52,5 @@ class BikePointTest(unittest.TestCase):
 
     def test_from_json(self):
         data = json.loads(self.SAMPLE_JSON)
-        bike_point = tfl.BikePoint.fromJSON(data)
+        bike_point = tfl.Point.fromJSON(data)
         self.assertEqual(self._SampleBikePoint(), bike_point)
