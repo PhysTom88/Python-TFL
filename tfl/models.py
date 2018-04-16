@@ -511,7 +511,7 @@ class JourneyOutline(TflModel):
             setattr(self, param, kwargs.get(kwarg_value, default))
 
     def __repr__(self):
-        return "JourneyOutline(From={0}, To={1}, Via{2})".format(
+        return "JourneyOutline(From={0}, To={1}, Via={2})".format(
             self._from, self.to, self.via
         )
 

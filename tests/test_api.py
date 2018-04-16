@@ -221,8 +221,7 @@ class TestTflApi(unittest.TestCase):
             match_querystring=True
         )
 
-        api = tfl.Api(app_id=self.app_id, app_key=self.app_key)
-        modes = api.GetJourneyModes()
+        modes = self.api.GetJourneyModes()
         self.assertGreater(len(modes), 0)
         self.assertTrue(isinstance(modes[0], tfl.JourneyMode))
 
@@ -236,7 +235,6 @@ class TestTflApi(unittest.TestCase):
             match_querystring=True
         )
 
-        api = tfl.Api(app_id=self.app_id, app_key=self.app_key)
-        modes = api.GetLineModes()
+        modes = self.api.GetLineModes()
         self.assertGreater(len(modes), 0)
         self.assertTrue(isinstance(modes[0], tfl.JourneyMode))
