@@ -225,3 +225,18 @@ class TestTflApi(unittest.TestCase):
         modes = api.GetJourneyModes()
         self.assertGreater(len(modes), 0)
         self.assertTrue(isinstance(modes[0], tfl.JourneyMode))
+
+    @responses.activate
+    def test_line_mode(self):
+        with open("tests/testdata/line_mode.json") as f:
+            json_data = f.read()
+
+        responses.add(
+            responses.GET, DEFAULT_URL, body=json_data,
+            match_querystring=True
+        )
+
+        api = tfl.Api(app_id=self.app_id, app_key=self.app_key)
+        modes = api.GetLineModes()
+        self.assertGreater(len(modes), 0)
+        self.assertTrue(isinstance(modes[0], tfl.JourneyMode))

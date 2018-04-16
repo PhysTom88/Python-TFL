@@ -195,6 +195,13 @@ class Api(object):
         else:
             return JourneyPlanner.fromJSON(data)
 
+    def GetLineModes(self):
+        url = self.base_url + "Line/Meta/Modes/"
+        response = self._Request(url, http_method="GET")
+        data = self._CheckResponse(response.json())
+
+        return [JourneyMode.fromJSON(j) for j in data]
+
     def _CheckResponse(self, content):
         if isinstance(content, (dict, list)) and 'exceptionType' in content:
             message = "{0}: {1}".format(content['httpStatusCode'],
