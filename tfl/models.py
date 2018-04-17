@@ -1448,3 +1448,21 @@ class JourneyPlanner(TflModel):
             lines=lines, searchCriteria=search_criteria,
             cycleHireDockingStationData=docking_data,
             stopMessages=stop_messages)
+
+
+class LineStatusSeverity(TflModel):
+
+    def __init__(self, **kwargs):
+        self.defaults = {
+            "modeName": None,
+            "severityLevel": None,
+            "description": None,
+        }
+
+        for (param, default) in self.defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "LineStatusSeverity(ModeName={0}, SeverityLevel={1})".format(
+            self.modeName, self.severityLevel
+        )

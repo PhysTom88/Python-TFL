@@ -17,6 +17,7 @@ from .models import (
     JourneyMode,
     JourneyDisambiguation,
     JourneyPlanner,
+    LineStatusSeverity,
 )
 
 from .api import Api

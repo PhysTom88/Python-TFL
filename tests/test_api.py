@@ -238,3 +238,18 @@ class TestTflApi(unittest.TestCase):
         modes = self.api.GetLineModes()
         self.assertGreater(len(modes), 0)
         self.assertTrue(isinstance(modes[0], tfl.JourneyMode))
+
+    @responses.activate
+    def test_line_severity_codes(self):
+        with open("tests/testdata/line_severity_codes.json") as f:
+            json_data = f.read()
+
+        responses.add(
+            responses.GET, DEFAULT_URL, body=json_data,
+            match_querystring=True
+        )
+
+        codes = self.api.GetLineSeverityCodes()
+        self.assertTrue(isinstance(codes, list))
+        self.assertGreater(len(codes), 1)
+        self.assertTrue(isinstance(codes[0], tfl.LineStatusSeverity))

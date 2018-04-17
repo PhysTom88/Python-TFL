@@ -14,7 +14,8 @@ from tfl import (
     Cabwise,
     JourneyMode,
     JourneyDisambiguation,
-    JourneyPlanner
+    JourneyPlanner,
+    LineStatusSeverity
 )
 
 from tfl.exceptions import TflError
@@ -201,6 +202,13 @@ class Api(object):
         data = self._CheckResponse(response.json())
 
         return [JourneyMode.fromJSON(j) for j in data]
+
+    def GetLineSeverityCodes(self):
+        url = self.base_url + "Line/Meta/Severity/"
+        response = self._Request(url, http_method="GET")
+        data = self._CheckResponse(response.json())
+
+        return [LineStatusSeverity.fromJSON(l) for l in data]
 
     def _CheckResponse(self, content):
         if isinstance(content, (dict, list)) and 'exceptionType' in content:
