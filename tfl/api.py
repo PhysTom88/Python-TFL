@@ -15,6 +15,7 @@ from tfl import (
     JourneyMode,
     JourneyDisambiguation,
     JourneyPlanner,
+    Line,
     LineStatusSeverity
 )
 
@@ -189,7 +190,8 @@ class Api(object):
                 validate_input(to, str, "to")),
             extra_params=extra_params, http_method="GET")
         data = self._CheckResponse(
-            response.json())
+            response.json()
+        )
 
         if "DisambiguationResult" in data["$type"]:
             return JourneyDisambiguation.fromJSON(data)
@@ -209,6 +211,32 @@ class Api(object):
         data = self._CheckResponse(response.json())
 
         return [LineStatusSeverity.fromJSON(l) for l in data]
+
+    def GetLineDisruptionCategories(self):
+        url = self.base_url + "Line/Meta/DisruptionCategories/"
+        response = self._Request(url, http_method="GET")
+        data = self._CheckResponse(response.json())
+
+        return [category for category in data]
+
+    def GetLineServiceTypes(self):
+        url = self.base_url + "Line/Meta/ServiceTypes/"
+        response = self._Request(url, http_method="GET")
+        data = self._CheckResponse(response.json())
+
+        return [service for service in data]
+
+    def GetLines(self, ids):
+        url = self.base_url + "Line/{0}/"
+        response = self._Request(
+            url.format(",".join(validate_input(ids, list, "ids"))),
+            http_method="GET"
+        )
+        data = self._CheckResponse(
+            response.json()
+        )
+
+        return [Line.fromJSON(l) for l in data]
 
     def _CheckResponse(self, content):
         if isinstance(content, (dict, list)) and 'exceptionType' in content:

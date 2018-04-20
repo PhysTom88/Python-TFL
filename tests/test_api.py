@@ -253,3 +253,48 @@ class TestTflApi(unittest.TestCase):
         self.assertTrue(isinstance(codes, list))
         self.assertGreater(len(codes), 1)
         self.assertTrue(isinstance(codes[0], tfl.LineStatusSeverity))
+
+    @responses.activate
+    def test_line_disruption_category(self):
+        with open("tests/testdata/line_disruption_category.json") as f:
+            json_data = f.read()
+
+        responses.add(
+            responses.GET, DEFAULT_URL, body=json_data,
+            match_querystring=True
+        )
+
+        categories = self.api.GetLineDisruptionCategories()
+        self.assertTrue(isinstance(categories, list))
+        self.assertGreater(len(categories), 1)
+        self.assertTrue(isinstance(categories[0], unicode))
+
+    @responses.activate
+    def test_line_service_types(self):
+        with open("tests/testdata/line_service_types.json") as f:
+            json_data = f.read()
+
+        responses.add(
+            responses.GET, DEFAULT_URL, body=json_data,
+            match_querystring=True
+        )
+
+        services = self.api.GetLineServiceTypes()
+        self.assertTrue(isinstance(services, list))
+        self.assertGreater(len(services), 1)
+        self.assertTrue(isinstance(services[0], unicode))
+
+    @responses.activate
+    def test_line_by_id(self):
+        with open("tests/testdata/line_by_id.json") as f:
+            json_data = f.read()
+
+        responses.add(
+            responses.GET, DEFAULT_URL, body=json_data,
+            match_querystring=True
+        )
+
+        lines = self.api.GetLines(["bakerloo", "central"])
+        self.assertTrue(isinstance(lines, list))
+        self.assertTrue(len(lines), 2)
+        self.assertTrue(isinstance(lines[0], tfl.Line))

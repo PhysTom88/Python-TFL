@@ -1344,6 +1344,14 @@ class Line(TflModel):
     def __repr__(self):
         return "Line(ID={0}, Name={1})".format(self.id, self.name)
 
+    @property
+    def created_in_seconds(self):
+        return int(parser.parse(self.created).strftime("%s"))
+
+    @property
+    def modified_in_seconds(self):
+        return int(parser.parse(self.modified).strftime("%s"))
+
     @classmethod
     def fromJSON(cls, data, **kwargs):
         disruptions = None
