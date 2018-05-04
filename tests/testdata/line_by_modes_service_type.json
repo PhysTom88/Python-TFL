@@ -1,0 +1,144 @@
+[
+  {
+    "$type": "Tfl.Api.Presentation.Entities.Line, Tfl.Api.Presentation.Entities",
+    "id": "dlr",
+    "name": "DLR",
+    "modeName": "dlr",
+    "disruptions": [],
+    "created": "2018-04-25T11:24:49.183Z",
+    "modified": "2018-04-25T11:24:49.183Z",
+    "lineStatuses": [],
+    "routeSections": [
+      {
+        "$type": "Tfl.Api.Presentation.Entities.MatchedRoute, Tfl.Api.Presentation.Entities",
+        "name": "Woolwich Arsenal DLR Station - Bank DLR Station",
+        "direction": "inbound",
+        "originationName": "Woolwich Arsenal DLR Station",
+        "destinationName": "Bank DLR Station",
+        "originator": "940GZZDLWLA",
+        "destination": "940GZZDLBNK",
+        "serviceType": "Regular",
+        "validTo": "2018-12-23T00:00:00Z",
+        "validFrom": "2018-04-23T00:00:00Z"
+      },
+      {
+        "$type": "Tfl.Api.Presentation.Entities.MatchedRoute, Tfl.Api.Presentation.Entities",
+        "name": "Bank DLR Station - Woolwich Arsenal DLR Station",
+        "direction": "outbound",
+        "originationName": "Bank DLR Station",
+        "destinationName": "Woolwich Arsenal DLR Station",
+        "originator": "940GZZDLBNK",
+        "destination": "940GZZDLWLA",
+        "serviceType": "Regular",
+        "validTo": "2018-12-23T00:00:00Z",
+        "validFrom": "2018-04-23T00:00:00Z"
+      },
+      {
+        "$type": "Tfl.Api.Presentation.Entities.MatchedRoute, Tfl.Api.Presentation.Entities",
+        "name": "Woolwich Arsenal DLR Station - Stratford International DLR Station",
+        "direction": "inbound",
+        "originationName": "Woolwich Arsenal DLR Station",
+        "destinationName": "Stratford International DLR Station",
+        "originator": "940GZZDLWLA",
+        "destination": "940GZZDLSIT",
+        "serviceType": "Regular",
+        "validTo": "2018-12-23T00:00:00Z",
+        "validFrom": "2018-04-23T00:00:00Z"
+      },
+      {
+        "$type": "Tfl.Api.Presentation.Entities.MatchedRoute, Tfl.Api.Presentation.Entities",
+        "name": "Tower Gateway DLR Station - Beckton DLR Station",
+        "direction": "outbound",
+        "originationName": "Tower Gateway DLR Station",
+        "destinationName": "Beckton DLR Station",
+        "originator": "940GZZDLTWG",
+        "destination": "940GZZDLBEC",
+        "serviceType": "Regular",
+        "validTo": "2018-12-23T00:00:00Z",
+        "validFrom": "2018-04-23T00:00:00Z"
+      },
+      {
+        "$type": "Tfl.Api.Presentation.Entities.MatchedRoute, Tfl.Api.Presentation.Entities",
+        "name": "Bank DLR Station - Lewisham DLR Station",
+        "direction": "outbound",
+        "originationName": "Bank DLR Station",
+        "destinationName": "Lewisham DLR Station",
+        "originator": "940GZZDLBNK",
+        "destination": "940GZZDLLEW",
+        "serviceType": "Regular",
+        "validTo": "2018-12-23T00:00:00Z",
+        "validFrom": "2018-04-23T00:00:00Z"
+      },
+      {
+        "$type": "Tfl.Api.Presentation.Entities.MatchedRoute, Tfl.Api.Presentation.Entities",
+        "name": "Beckton DLR Station - Tower Gateway DLR Station",
+        "direction": "inbound",
+        "originationName": "Beckton DLR Station",
+        "destinationName": "Tower Gateway DLR Station",
+        "originator": "940GZZDLBEC",
+        "destination": "940GZZDLTWG",
+        "serviceType": "Regular",
+        "validTo": "2018-12-23T00:00:00Z",
+        "validFrom": "2018-04-23T00:00:00Z"
+      },
+      {
+        "$type": "Tfl.Api.Presentation.Entities.MatchedRoute, Tfl.Api.Presentation.Entities",
+        "name": "Lewisham DLR Station - Stratford DLR Station",
+        "direction": "inbound",
+        "originationName": "Lewisham DLR Station",
+        "destinationName": "Stratford DLR Station",
+        "originator": "940GZZDLLEW",
+        "destination": "940GZZDLSTD",
+        "serviceType": "Regular",
+        "validTo": "2018-12-23T00:00:00Z",
+        "validFrom": "2018-04-23T00:00:00Z"
+      },
+      {
+        "$type": "Tfl.Api.Presentation.Entities.MatchedRoute, Tfl.Api.Presentation.Entities",
+        "name": "Stratford DLR Station - Lewisham DLR Station",
+        "direction": "outbound",
+        "originationName": "Stratford DLR Station",
+        "destinationName": "Lewisham DLR Station",
+        "originator": "940GZZDLSTD",
+        "destination": "940GZZDLLEW",
+        "serviceType": "Regular",
+        "validTo": "2018-12-23T00:00:00Z",
+        "validFrom": "2018-04-23T00:00:00Z"
+      },
+      {
+        "$type": "Tfl.Api.Presentation.Entities.MatchedRoute, Tfl.Api.Presentation.Entities",
+        "name": "Stratford International DLR Station - Woolwich Arsenal DLR Station",
+        "direction": "outbound",
+        "originationName": "Stratford International DLR Station",
+        "destinationName": "Woolwich Arsenal DLR Station",
+        "originator": "940GZZDLSIT",
+        "destination": "940GZZDLWLA",
+        "serviceType": "Regular",
+        "validTo": "2018-12-23T00:00:00Z",
+        "validFrom": "2018-04-23T00:00:00Z"
+      },
+      {
+        "$type": "Tfl.Api.Presentation.Entities.MatchedRoute, Tfl.Api.Presentation.Entities",
+        "name": "Lewisham DLR Station - Bank DLR Station",
+        "direction": "inbound",
+        "originationName": "Lewisham DLR Station",
+        "destinationName": "Bank DLR Station",
+        "originator": "940GZZDLLEW",
+        "destination": "940GZZDLBNK",
+        "serviceType": "Regular",
+        "validTo": "2018-12-23T00:00:00Z",
+        "validFrom": "2018-04-23T00:00:00Z"
+      }
+    ],
+    "serviceTypes": [
+      {
+        "$type": "Tfl.Api.Presentation.Entities.LineServiceTypeInfo, Tfl.Api.Presentation.Entities",
+        "name": "Regular",
+        "uri": "/Line/Route?ids=DLR&serviceTypes=Regular"
+      }
+    ],
+    "crowding": {
+      "$type": "Tfl.Api.Presentation.Entities.Crowding, Tfl.Api.Presentation.Entities"
+    }
+  }
+]

@@ -294,7 +294,95 @@ class TestTflApi(unittest.TestCase):
             match_querystring=True
         )
 
-        lines = self.api.GetLines(["bakerloo", "central"])
+        lines = self.api.GetLinesByID(["bakerloo", "central"])
         self.assertTrue(isinstance(lines, list))
         self.assertTrue(len(lines), 2)
         self.assertTrue(isinstance(lines[0], tfl.Line))
+
+    @responses.activate
+    def test_line_by_mode(self):
+        with open("tests/testdata/line_by_mode.json") as f:
+            json_data = f.read()
+
+        responses.add(
+            responses.GET, DEFAULT_URL, body=json_data,
+            match_querystring=True
+        )
+
+        lines = self.api.GetLinesByMode(["dlr"])
+        self.assertTrue(isinstance(lines, list))
+        self.assertGreaterEqual(len(lines), 1)
+        self.assertTrue(isinstance(lines[0], tfl.Line))
+
+    @responses.activate
+    def test_line_by_service_type(self):
+        with open("tests/testdata/line_by_service_type.json") as f:
+            json_data = f.read()
+
+        responses.add(
+            responses.GET, DEFAULT_URL, body=json_data,
+            match_querystring=True
+        )
+
+        lines = self.api.GetLinesByMode("Night")
+        self.assertTrue(isinstance(lines, list))
+        self.assertGreaterEqual(len(lines), 1)
+        self.assertTrue(isinstance(lines[0], tfl.Line))
+
+    @responses.activate
+    def test_line_by_id_service_type(self):
+        with open("tests/testdata/line_by_id_service_type.json") as f:
+            json_data = f.read()
+
+        responses.add(
+            responses.GET, DEFAULT_URL, body=json_data,
+            match_querystring=True
+        )
+
+        lines = self.api.GetLinesByIDServiceType(["central"], "Night")
+        self.assertTrue(isinstance(lines, list))
+        self.assertGreaterEqual(len(lines), 1)
+        self.assertTrue(isinstance(lines[0], tfl.Line))
+
+    @responses.activate
+    def test_line_by_modes_service_type(self):
+        with open("tests/testdata/line_by_modes_service_type.json") as f:
+            json_data = f.read()
+
+        responses.add(
+            responses.GET, DEFAULT_URL, body=json_data,
+            match_querystring=True
+        )
+
+        lines = self.api.GetLinesByModeServiceType(["dlr"], "Regular")
+
+        self.assertTrue(isinstance(lines, list))
+        self.assertGreaterEqual(len(lines), 1)
+        self.assertTrue(isinstance(lines[0], tfl.Line))
+
+    @responses.activate
+    def test_line_route_sequence(self):
+        with open("tests/testdata/line_route_sequence.json") as f:
+            json_data = f.read()
+
+        responses.add(
+            responses.GET, DEFAULT_URL, body=json_data,
+            match_querystring=True
+        )
+
+        line = self.api.GetLineRouteSequence(
+            "waterloocity", "inbound", "Regular", True
+        )
+        self.assertTrue(isinstance(line, tfl.LineRouteSequence))
+        self.assertTrue(isinstance(line.lineStrings, list))
+        self.assertTrue(isinstance(line.stations, list))
+        self.assertTrue(isinstance(line.stations[0], tfl.models.Station))
+        self.assertTrue(isinstance(line.stopPointSequences, list))
+        self.assertTrue(
+            isinstance(
+                line.stopPointSequences[0], tfl.models.StopPointSequence)
+        )
+        self.assertTrue(isinstance(line.orderedLineRoutes, list))
+        self.assertTrue(isinstance(
+            line.orderedLineRoutes[0], tfl.models.LineRoute)
+        )

@@ -16,6 +16,7 @@ from tfl import (
     JourneyDisambiguation,
     JourneyPlanner,
     Line,
+    LineRouteSequence,
     LineStatusSeverity
 )
 
@@ -226,7 +227,7 @@ class Api(object):
 
         return [service for service in data]
 
-    def GetLines(self, ids):
+    def GetLinesByID(self, ids):
         url = self.base_url + "Line/{0}/"
         response = self._Request(
             url.format(",".join(validate_input(ids, list, "ids"))),
@@ -237,6 +238,83 @@ class Api(object):
         )
 
         return [Line.fromJSON(l) for l in data]
+
+    def GetLinesByMode(self, modes):
+        url = self.base_url + "Line/Mode/{0}/"
+        response = self._Request(
+            url.format(validate_input(modes, list, "modes")),
+            http_method="GET"
+        )
+        data = self._CheckResponse(response.json())
+
+        return [Line.fromJSON(l) for l in data]
+
+    def GetLineByServiceType(self, serviceType):
+        url = self.base_url + "Line/Route/"
+        extra_params = {}
+        if serviceType in ["Regular", "Night"]:
+            extra_params["serviceTypes"] = validate_input(
+                serviceType, str, "serviceType"
+            )
+        response = self._Request(
+            url, extra_params=extra_params, http_method="GET"
+        )
+        data = self._CheckResponse(response.json())
+
+        return [Line.fromJSON(l) for l in data]
+
+    def GetLinesByIDServiceType(self, ids, serviceType):
+        url = self.base_url + "Line/%s/Route/"
+        extra_params = {}
+        if serviceType in ["Regular", "Night"]:
+            extra_params["serviceTypes"] = validate_input(
+                serviceType, str, "serviceType"
+            )
+        response = self._Request(
+            url.format(validate_input(ids, list, "ids")),
+            extra_params=extra_params, http_method="GET"
+        )
+        data = self._CheckResponse(response.json())
+        if isinstance(data, dict):
+            data = [data]
+
+        return [Line.fromJSON(l) for l in data]
+
+    def GetLinesByModeServiceType(self, modes, serviceType):
+        url = self.base_url + "Line/Mode/{0}/Route/"
+        extra_params = {}
+        if serviceType in ["Regular", "Night"]:
+            extra_params["serviceTypes"] = validate_input(
+                serviceType, str, "serviceType"
+            )
+        response = self._Request(
+            url.format(validate_input(modes, list, "modes")),
+            extra_params=extra_params, http_method="GET"
+        )
+        data = self._CheckResponse(response.json())
+
+        return [Line.fromJSON(l) for l in data]
+
+    def GetLineRouteSequence(
+        self, _id, direction, serviceTypes, excludeCrowding
+    ):
+        url = self.base_url + "Line/{0}/Route/Sequence/{1}/"
+
+        extra_params = {}
+        if serviceTypes in ["Regular", "Night"]:
+            extra_params["serviceTypes"] = validate_input(
+                serviceTypes, str, "serviceType"
+            )
+        if excludeCrowding is not None:
+            extra_params["excludeCrowding"] = validate_input(
+                excludeCrowding, bool, "excludeCrowding")
+        response = self._Request(
+            url.format(validate_input(_id, str, "_id"),
+                       validate_input(direction, str, "direction")),
+            extra_params=extra_params, http_method="GET"
+        )
+        data = self._CheckResponse(response.json())
+        return LineRouteSequence.fromJSON(data)
 
     def _CheckResponse(self, content):
         if isinstance(content, (dict, list)) and 'exceptionType' in content:

@@ -1,0 +1,63 @@
+{
+  "$type": "Tfl.Api.Presentation.Entities.Line, Tfl.Api.Presentation.Entities",
+  "id": "central",
+  "name": "Central",
+  "modeName": "tube",
+  "disruptions": [],
+  "created": "2018-04-25T11:24:49.177Z",
+  "modified": "2018-04-25T11:24:49.177Z",
+  "lineStatuses": [],
+  "routeSections": [
+    {
+      "$type": "Tfl.Api.Presentation.Entities.MatchedRoute, Tfl.Api.Presentation.Entities",
+      "name": "Loughton Underground Station - Ealing Broadway Underground Station",
+      "direction": "inbound",
+      "originationName": "Loughton Underground Station",
+      "destinationName": "Ealing Broadway Underground Station",
+      "originator": "940GZZLULGN",
+      "destination": "940GZZLUEBY",
+      "serviceType": "Night",
+      "validTo": "2500-12-24T00:00:00Z",
+      "validFrom": "2015-01-05T00:00:00Z"
+    },
+    {
+      "$type": "Tfl.Api.Presentation.Entities.MatchedRoute, Tfl.Api.Presentation.Entities",
+      "name": "Ealing Broadway Underground Station - Hainault Underground Station",
+      "direction": "outbound",
+      "originationName": "Ealing Broadway Underground Station",
+      "destinationName": "Hainault Underground Station",
+      "originator": "940GZZLUEBY",
+      "destination": "940GZZLUHLT",
+      "serviceType": "Night",
+      "validTo": "2500-12-24T00:00:00Z",
+      "validFrom": "2015-01-05T00:00:00Z"
+    },
+    {
+      "$type": "Tfl.Api.Presentation.Entities.MatchedRoute, Tfl.Api.Presentation.Entities",
+      "name": "Ealing Broadway Underground Station - Loughton Underground Station",
+      "direction": "outbound",
+      "originationName": "Ealing Broadway Underground Station",
+      "destinationName": "Loughton Underground Station",
+      "originator": "940GZZLUEBY",
+      "destination": "940GZZLULGN",
+      "serviceType": "Night",
+      "validTo": "2500-12-24T00:00:00Z",
+      "validFrom": "2015-01-05T00:00:00Z"
+    }
+  ],
+  "serviceTypes": [
+    {
+      "$type": "Tfl.Api.Presentation.Entities.LineServiceTypeInfo, Tfl.Api.Presentation.Entities",
+      "name": "Regular",
+      "uri": "/Line/Route?ids=Central&serviceTypes=Regular"
+    },
+    {
+      "$type": "Tfl.Api.Presentation.Entities.LineServiceTypeInfo, Tfl.Api.Presentation.Entities",
+      "name": "Night",
+      "uri": "/Line/Route?ids=Central&serviceTypes=Night"
+    }
+  ],
+  "crowding": {
+    "$type": "Tfl.Api.Presentation.Entities.Crowding, Tfl.Api.Presentation.Entities"
+  }
+}

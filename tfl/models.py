@@ -1384,6 +1384,170 @@ class Line(TflModel):
         )
 
 
+class StopPointSequence(TflModel):
+
+    def __init__(self, **kwargs):
+        self.defaults = {
+            "lineId": None,
+            "lineName": None,
+            "direction": None,
+            "branchId": None,
+            "nextBranchIds": None,
+            "prevBranchIds": None,
+            "stopPoint": None,
+            "serviceType": None
+        }
+
+        for (param, default) in self.defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "StopPointSequence(LineID={0}, LineName={1})".format(
+            self.lineId, self.lineName
+        )
+
+    @classmethod
+    def fromJSON(cls, data, **kwargs):
+        nextBranchIds = None
+        prevBranchIds = None
+        stopPoint = None
+
+        if "nextBranchIds" in data:
+            nextBranchIds = [_id for _id in data["nextBranchIds"]]
+        if "prevBranchIds" in data:
+            prevBranchIds = [_id for _id in data["prevBranchIds"]]
+        if "stopPoint" in data:
+            stopPoint = [Station.fromJSON(p) for p in data["stopPoint"]]
+
+        return super(cls, cls).fromJSON(
+            data=data, nextBranchIds=nextBranchIds,
+            prevBranchIds=prevBranchIds, stopPoint=stopPoint
+        )
+
+
+class Station(TflModel):
+
+    def __init__(self, **kwargs):
+        self.defaults = {
+            "routeId": None,
+            "parentId": None,
+            "stationId": None,
+            "icsId": None,
+            "topMostParentId": None,
+            "direction": None,
+            "towards": None,
+            "modes": None,
+            "stopType": None,
+            "stopLetter": None,
+            "zone": None,
+            "accessibilitySummary": None,
+            "hasDisruption": None,
+            "lines": None,
+            "status": None,
+            "id": None,
+            "url": None,
+            "name": None,
+            "lat": None,
+            "lon": None
+        }
+
+        for (param, default) in self.defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "Station(RouteID={0}, StationID={1})".format(
+            self.routeId, self.stationId
+        )
+
+    @classmethod
+    def fromJSON(cls, data, **kwargs):
+        modes = None
+        lines = None
+        if "modes" in data:
+            modes = [mode for mode in data["modes"]]
+        if "lines" in data:
+            lines = [LineSequence.fromJSON(l) for l in data["lines"]]
+
+        return super(cls, cls).fromJSON(data=data, modes=modes, lines=lines)
+
+
+class LineRoute(TflModel):
+
+    def __init__(self, **kwargs):
+        self.defaults = {
+            "name": None,
+            "naptanIds": None,
+            "serviceType": None
+        }
+
+        for (param, default) in self.defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "LineRoute(Name={0}, ServiceType={1})".format(
+            self.name, self.serviceType
+        )
+
+    @classmethod
+    def fromJSON(cls, data, **kwargs):
+        naptanIds = None
+        if "naptanIds" in data:
+            naptanIds = [_id for _id in data["naptanIds"]]
+
+        return super(cls, cls).fromJSON(data=data, naptanIds=naptanIds)
+
+
+class LineRouteSequence(TflModel):
+
+    def __init__(self, **kwargs):
+        self.defaults = {
+            "lineId": None,
+            "lineName": None,
+            "direction": None,
+            "isOutboundOnly": None,
+            "mode": None,
+            "lineStrings": None,
+            "stations": None,
+            "stopPointSequences": None,
+            "orderedLineRoutes": None
+        }
+
+        for (param, default) in self.defaults.items():
+            setattr(self, param, kwargs.get(param, default))
+
+    def __repr__(self):
+        return "LineRouteSequence(LineName={0}, Direction={1})".format(
+            self.lineName, self.direction
+        )
+
+    @classmethod
+    def fromJSON(cls, data, **kwargs):
+        lineStrings = None
+        stations = None
+        stopPointSequences = None
+        orderedLineRoutes = None
+
+        if "lineStrings" in data:
+            lineStrings = [json.loads(l) for l in data["lineStrings"]][0][0]
+        if "stations" in data:
+            stations = [Station.fromJSON(s) for s in data["stations"]]
+        if "stopPointSequences" in data:
+            stopPointSequences = [
+                StopPointSequence.fromJSON(p)
+                for p in data["stopPointSequences"]
+            ]
+        if "orderedLineRoutes" in data:
+            orderedLineRoutes = [
+                LineRoute.fromJSON(l) for l in data["orderedLineRoutes"]
+            ]
+
+        return super(cls, cls).fromJSON(
+            data=data, lineStrings=lineStrings, stations=stations,
+            stopPointSequences=stopPointSequences,
+            orderedLineRoutes=orderedLineRoutes
+        )
+
+
 class DockingPoint(TflModel):
 
     def __init__(self, **kwargs):

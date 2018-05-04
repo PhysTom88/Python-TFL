@@ -18,6 +18,7 @@ from .models import (
     JourneyDisambiguation,
     JourneyPlanner,
     Line,
+    LineRouteSequence,
     LineStatusSeverity,
 )
 
