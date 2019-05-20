@@ -2,14 +2,14 @@
 
 
 class TflError(Exception):
-    "A Generic error from TfL"
+    """A Generic error from TfL"""
     pass
 
 class HttpMethodNotAllowed(Exception):
     """This method does not allow that HTTP method"""
     pass
 
-class InvalidInputError(Exception):
+class InvalidInputError(TypeError):
     """This input is in the wrong format"""
     pass
 
