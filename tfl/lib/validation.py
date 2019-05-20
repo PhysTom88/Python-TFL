@@ -2,17 +2,17 @@
 import re
 from datetime import date
 
-from tfl.exceptions import TflError
+from tfl.api.exceptions import TflError, InvalidInputError
 
 
 def validate_year(year):
     year_re = re.compile('(|19|20)\d{2}$')
     if not year_re.match(str(year)):
-        raise TflError("\"{0}\" is in an invalid format".format(year))
+        raise InvalidInputError("\"{0}\" is in an invalid format".format(year))
 
     now = date.today().year
     if int(year) > now:
-        raise TflError("\"{0}\" is not an accepted value".format(year))
+        raise InvalidInputError("\"{0}\" is not an accepted value".format(year))
 
     return str(year)
 
