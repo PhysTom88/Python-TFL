@@ -6,8 +6,6 @@ from tfl.lib.validation import validate_input, validate_latitude, validate_longi
 
 class Cabwise(Api):
 
-    ALLOWED_OPTYPES = [""]
-
     def search(
             self, lat, lon, optype=None, wc=None, radius=None,
             name=None, max_results=None, legacy_format=False,
@@ -17,7 +15,7 @@ class Cabwise(Api):
         extra_params = dict()
         extra_params["lat"] = validate_latitude(lat)
         extra_params["lon"] = validate_longitude(lon)
-        if optype and optype in self.ALLOWED_OPTYPES:
+        if optype:
             extra_params["optype"] = optype
         if wc:
             extra_params["wc"] = stringify_boolean(wc)

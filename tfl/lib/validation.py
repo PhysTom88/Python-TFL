@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
-from datetime import date
+from datetime import date, datetime
 
 from tfl.api.exceptions import TflError, InvalidInputError
 
@@ -40,3 +40,15 @@ def validate_longitude(longitude):
         raise InvalidInputError("Longitude out of range")
 
     return clean_long
+
+
+def validate_datestring(date, string_format, length=None):
+    clean_date = validate_input(date, str, "date")
+    if length and len(clean_date) != length:
+        raise InvalidInputError("Invalid date format, must be '{0}'".format(string_format))
+    try:
+        datetime.strptime(clean_date, string_format)
+    except ValueError:
+        raise InvalidInputError("Invalid date format, must be '{0}'".format(string_format))
+    else:
+        return clean_date
