@@ -11,3 +11,6 @@ def stringify_boolean(to_string):
         return "False"
     else:
         raise InvalidInputError("Unable to booleanise the string: {0}".format(clean_string))
+
+def sensible_string_list(the_list):
+    return ", ".join(the_list[:-1]) + " or " + the_list[-1]
