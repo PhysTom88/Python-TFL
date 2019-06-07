@@ -193,3 +193,57 @@ class Line(Api):
         data = self._check_response(response.json())
 
         return data
+
+    def station_timetable(self, stop_point, line_id):
+        url = self.base_url + "/Line/{0}/Timetable/{1}"
+        clean_stop_point = validate_input(stop_point, str, "stop_point")
+        clean_line_id = validate_input(line_id, str, "line_id")
+        response = self._request(url.format(clean_line_id, clean_stop_point), http_method="GET")
+        data = self._check_response(response.json())
+
+        return data
+
+    def station_destination_timetable(self, start_point, line_id, end_point):
+        url = self.base_url + "/Line/{0}/Timetable/{1}/to/{2}"
+        clean_start_point = validate_input(start_point, str, "start_point")
+        clean_line_id = validate_input(line_id, str, "line_id")
+        clean_end_point = validate_input(end_point, str, end_point)
+        response = self._request(url.format(clean_line_id, clean_start_point, clean_end_point), http_method="GET")
+        data = self._check_response(response.json())
+
+        return data
+
+    def distruptions_by_lines(self, ids):
+        url = self.base_url + "/Line/{0}/Disruption"
+        clean_ids = validate_input(ids, str, "ids")
+        response = self._request(url.format(clean_ids), http_method="GET")
+        data = self._check_response(response.json())
+
+        return data
+
+    def distruptions_by_modes(self, modes):
+        url = self.base_url + "/Line/Mode/{0}/Disruption"
+        clean_modes = validate_input(modes, str, "modes")
+        response = self._request(url.format(clean_modes), http_method="GET")
+        data = self._check_response(response.json())
+
+        return data
+
+    def arrival_predicions_at_stop(self, ids, stop_point, direction=None, destionation_point=None):
+        url = self.base_url + "/Line/{0}/Arrivals/{1}"
+        clean_ids = validate_input(ids, str, "ids")
+        clean_stop_point = validate_input(stop_point, str, "stop_point")
+
+        extra_params = {}
+        if direction in self.DIRECTIONS:
+            extra_params["direction"] = direction
+        if destionation_point:
+            extra_params["destinationStop"] = validate_input(destionation_point, str, "destination_point")
+
+        response = self._request(
+            url.format(clean_ids, clean_stop_point),
+            extra_params=extra_params, http_method="GET"
+        )
+        data = self._check_response(response.json())
+
+        return data
