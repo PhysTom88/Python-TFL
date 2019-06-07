@@ -146,7 +146,7 @@ class Line(Api):
         return data
 
     def line_search(self, query, modes=None, service_type=None):
-        url = self.base_url + "Line/Search/{0}"
+        url = self.base_url + "Line/Search/{0}/"
         extra_params = {}
         if modes:
             extra_params["modes"] = validate_input(modes, str, "mode")
@@ -156,6 +156,40 @@ class Line(Api):
         response = self._request(
             url.format(validate_input(query, str, "query")),
             extra_params=extra_params, http_method="GET")
+        data = self._check_response(response.json())
+
+        return data
+
+    def line_by_status(self, severity):
+        url = self.base_url + "Line/Status/{0}"
+        clean_severity = validate_input(severity, int, "severity")
+        response = self._request(url.format(clean_severity), http_method="GET")
+        data = self._check_response(response.json())
+
+        return data
+
+    def line_status_by_mode(self, ids, detail=True):
+        url = self.base_url + "Line/Mode/{0}/Status/"
+        clean_ids = validate_input(ids, str, "ids")
+
+        extra_params = {}
+        if detail is not None:
+            extra_params["detail"] = validate_input(detail, bool, "detail")
+
+        response = self._request(url.format(clean_ids), extra_params=extra_params, http_method="GET")
+        data = self._check_response(response.json())
+
+        return data
+
+    def line_station_list(self, line, tfl_operated=None):
+        url = self.base_url + "Line/{0}/StopPoints/"
+        clean_line = validate_input(line, str, "line")
+
+        extra_params = {}
+        if tfl_operated is not None:
+            extra_params["tflOperatedNationalRailStationsOnly"] = validate_input(tfl_operated, bool, "tfl_operated")
+
+        response = self._request(url.format(clean_line), extra_params=extra_params, http_method="GET")
         data = self._check_response(response.json())
 
         return data
