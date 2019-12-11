@@ -22,7 +22,7 @@ class Api:
         self.app_id = app_id
         self.app_key = app_key
         self.base_url = "https://api.tfl.gov.uk/"
-        self._timeout = timeout
+        self.timeout = timeout
 
         self.validate_credentials(app_id=app_id, app_key=app_key)
 
@@ -65,6 +65,6 @@ class Api:
             raise HttpMethodNotAllowed("{0}".format(http_method))
         else:
             url = self._build_absolute_url(url, get_params=get_params)
-            response = requests.get(url, timeout=self._timeout)
+            response = requests.get(url, timeout=self.timeout)
 
         return response

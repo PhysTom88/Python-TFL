@@ -1,1 +1,0 @@
-{"$type":"Tfl.Api.Presentation.Entities.ApiError, Tfl.Api.Presentation.Entities","timestampUtc":"2018-03-15T14:42:28.1392553Z","exceptionType":"ApiArgumentException","httpStatusCode":400,"httpStatus":"BadRequest","relativeUri":"/AccidentStats/1901/","message":"The following year is not recognised: 1901"}
